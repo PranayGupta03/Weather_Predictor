@@ -109,8 +109,13 @@ DEBUG=True
 
 ## Deployment 🌐
 
-### Vercel
-This project is configured for Vercel deployment. See `vercel.json` for configuration.
+### Railway (Recommended)
+1. Fork this repository
+2. Go to [railway.app](https://railway.app)
+3. Click "New Project" → "Deploy from GitHub repo"
+4. Select this repository
+5. Add environment variable: `OPENWEATHER_API_KEY`
+6. Deploy!
 
 ### Heroku
 ```bash
