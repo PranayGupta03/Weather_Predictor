@@ -107,21 +107,15 @@ DEBUG=True
 | `/compare` | GET | Multi-city comparison |
 | `/history` | GET | Prediction history |
 
-## Deployment 🌐
+## Running Locally 🖥️
 
-### Railway (Recommended)
-1. Fork this repository
-2. Go to [railway.app](https://railway.app)
-3. Click "New Project" → "Deploy from GitHub repo"
-4. Select this repository
-5. Add environment variable: `OPENWEATHER_API_KEY`
-6. Deploy!
-
-### Heroku
 ```bash
-heroku create your-app-name
-heroku config:set OPENWEATHER_API_KEY=your_key
-git push heroku main
+# Clone and run
+git clone https://github.com/PranayGupta03/Weather_Predictor.git
+cd Weather_Predictor
+pip install -r requirements.txt
+python app.py
+# Open http://127.0.0.1:5000
 ```
 
 ## Screenshots 📸
