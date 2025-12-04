@@ -1,145 +1,228 @@
-# Weather Predictor 🌦️
+# 🌦️ Weather Predictor — AI-Powered Forecasting Web App  
 
-A modern, AI-powered weather prediction application built with Flask and Machine Learning.
+A **modern, fully-featured weather prediction platform** built with **Flask, Machine Learning, and real-time weather APIs**. This project combines **data science, software engineering, and UI/UX** to deliver an intelligent, fast, and visually appealing weather dashboard.
 
-![Weather Predictor](https://img.shields.io/badge/Python-3.9+-blue.svg)
+<div align="center">
+
+![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)
 ![Flask](https://img.shields.io/badge/Flask-2.0+-green.svg)
+![ML](https://img.shields.io/badge/Machine%20Learning-Scikit--Learn-orange.svg)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-## Features ✨
+</div>
 
-- **ML-Powered Predictions** - Uses Linear Regression, Random Forest, and Gradient Boosting
-- **Real-time Weather Data** - Fetches live data from OpenWeatherMap API
-- **5-Day Forecast** - View upcoming weather conditions
-- **Air Quality Index (AQI)** - Real-time air quality monitoring
-- **Multi-City Comparison** - Compare weather across 25+ Indian cities
-- **Favorites System** - Save and quickly access favorite cities
-- **Prediction History** - Track all past predictions with analytics
-- **Dark Mode** - Beautiful dark/light theme toggle
-- **Responsive Design** - Works on desktop and mobile
+---
 
-## Tech Stack 🛠️
+## ⭐ Overview
 
-- **Backend:** Python, Flask
-- **ML:** Scikit-learn (LinearRegression, RandomForest, GradientBoosting)
-- **Database:** SQLite
-- **Frontend:** HTML5, CSS3, JavaScript, Chart.js
-- **API:** OpenWeatherMap
+Weather Predictor is designed as a **production-ready**, ML-driven application that provides:
 
-## Project Structure 📁
+- **Accurate temperature predictions** using multiple ML models  
+- **Live weather updates** and multi-city comparison  
+- **Interactive charts**, dark mode UI, and complete prediction history  
+
+Ideal for **portfolio showcases**, **academic submissions**, and **ML learners**.
+
+---
+
+## ✨ Features
+
+### 🔮 Machine Learning
+- Built-in models:
+  - **Linear Regression**
+  - **Random Forest Regressor**
+  - **Gradient Boosting Regressor**
+- Automated feature preprocessing  
+- Real-time predictions using live API data  
+
+### 🌦️ Weather & Forecasting
+- Live temperature, humidity, wind speed, pressure, cloud %, and visibility  
+- **5-Day Weather Forecast**  
+- **Air Quality Index (AQI)** with pollutant categorization  
+
+### 🏙️ Multi-City & User Tools
+- Compare weather across **25+ Indian cities**
+- Save **favorite cities**
+- **Prediction History** with analytics and timestamps
+
+### 🎨 UI/UX
+- Fully **responsive** (mobile + desktop)
+- **Dark/Light mode**
+- Smooth animations + glassmorphism styling
+- Chart.js interactive graphs
+
+---
+
+## 🛠️ Tech Stack
+
+### Backend
+- Python 3.9+
+- Flask  
+- SQLite  
+
+### Machine Learning
+- scikit-learn  
+- NumPy, Pandas  
+
+### Frontend
+- HTML5, CSS3, JavaScript  
+- Chart.js  
+
+### APIs
+- **OpenWeatherMap** (Live weather + forecast)
+
+---
+
+## 📁 Project Structure
 
 ```
 weatherpredictor/
-├── app.py                 # Flask application entry point
-├── config.py              # Configuration settings
-├── requirements.txt       # Python dependencies
+│
+├── app.py                   # Flask app entry point
+├── config.py                # Environment variables, API keys
+├── requirements.txt         # Dependencies
+│
 ├── ml/
-│   └── model.py           # ML models (LR, RF, GB)
+│   └── model.py             # ML models and prediction pipeline
+│
 ├── services/
-│   ├── weather_service.py # Weather API integration
-│   └── history_service.py # SQLite history management
+│   ├── weather_service.py   # OpenWeather API service
+│   └── history_service.py   # SQLite operations
+│
 ├── static/
 │   ├── css/
-│   │   └── style.css      # Glassmorphism styling
+│   │   └── style.css        # UI styling
 │   └── js/
-│       └── main.js        # Frontend logic
+│       └── main.js          # Frontend logic
+│
 └── templates/
-    └── index.html         # Main dashboard
+    └── index.html           # UI dashboard
 ```
 
-## Installation 🚀
+---
+
+## 🚀 Installation & Setup
 
 ### Prerequisites
 - Python 3.9+
-- OpenWeatherMap API Key (free tier works)
+- OpenWeatherMap API Key
 
-### Setup
+### 1️⃣ Clone the repository
+```bash
+git clone https://github.com/yourusername/weatherpredictor.git
+cd weatherpredictor
+```
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/weatherpredictor.git
-   cd weatherpredictor
-   ```
+### 2️⃣ Create virtual environment
+```bash
+python -m venv venv
+source venv/bin/activate     # Mac/Linux
+venv\Scripts\activate        # Windows
+```
 
-2. **Create virtual environment**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
+### 3️⃣ Install dependencies
+```bash
+pip install -r requirements.txt
+```
 
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
+### 4️⃣ Configure `.env`
+```bash
+cp .env.example .env
+```
 
-4. **Configure environment**
-   ```bash
-   cp .env.example .env
-   # Edit .env and add your OpenWeatherMap API key
-   ```
-
-5. **Run the application**
-   ```bash
-   python app.py
-   ```
-
-6. **Open in browser**
-   ```
-   http://127.0.0.1:5000
-   ```
-
-## Environment Variables 🔐
-
-Create a `.env` file with:
-
+Edit:
 ```env
 OPENWEATHER_API_KEY=your_api_key_here
 FLASK_SECRET_KEY=your_secret_key
 DEBUG=True
 ```
 
-## API Endpoints 📡
+### 5️⃣ Run the server
+```bash
+python app.py
+```
+
+### 6️⃣ Open browser
+```
+http://127.0.0.1:5000
+```
+
+---
+
+## 🔐 Environment Variables
+
+| Variable | Description |
+|---------|-------------|
+| `OPENWEATHER_API_KEY` | API key for weather data |
+| `FLASK_SECRET_KEY` | Security key for sessions |
+| `DEBUG` | Enable/disable debug mode |
+
+---
+
+## 📡 API Endpoints
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/` | GET | Main dashboard |
-| `/predict` | POST | Get weather prediction |
-| `/compare` | GET | Multi-city comparison |
-| `/history` | GET | Prediction history |
+| `/predict` | POST | Predict temperature |
+| `/compare` | GET | Compare multiple cities |
+| `/history` | GET | Fetch prediction history |
 
-## Running Locally 🖥️
+---
+
+## 🖥️ Quick Run
 
 ```bash
-# Clone and run
 git clone https://github.com/PranayGupta03/Weather_Predictor.git
 cd Weather_Predictor
 pip install -r requirements.txt
 python app.py
-# Open http://127.0.0.1:5000
 ```
 
-## Screenshots 📸
+---
 
-### Light Mode
+## 📸 Screenshots
+
+### 🌞 Light Mode
 ![Light Mode Dashboard](screenshots/light-mode.png)
 
-### Dark Mode
+### 🌙 Dark Mode
 ![Dark Mode Dashboard](screenshots/dark-mode.png)
 
-## Contributing 🤝
+---
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+## 🤝 Contributing
 
-## License 📄
+1. Fork the repository  
+2. Create a branch  
+   ```bash
+   git checkout -b feature/amazing-feature
+   ```
+3. Commit your changes  
+4. Push to the branch  
+5. Submit a Pull Request  
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+---
 
-## Acknowledgments 🙏
+## 📄 License
 
-- [OpenWeatherMap](https://openweathermap.org/) for the weather API
-- [Chart.js](https://www.chartjs.org/) for beautiful charts
-- [FontAwesome](https://fontawesome.com/) for icons
+Distributed under the **MIT License**.
+
+---
+
+## 🙏 Acknowledgments
+
+- **OpenWeatherMap**
+- **Scikit-learn**
+- **Chart.js**
+- **FontAwesome**
+
+---
+
+## 🎯 Final Notes
+
+This project highlights:
+- Clean architecture  
+- ML + API integration  
+- Professional UI  
+- Scalable backend
