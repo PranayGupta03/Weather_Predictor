@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Insights & Prediction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-cloud-sun-rain"></i> WeatherPredictor
+        </div>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle Dark Mode">
+            <i class="fas fa-moon"></i>
+        </button>
+    </nav>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-search-location"></i> Prediction</h3>
+                <p>Select a city to analyze</p>
+            </div>
+            <form id="predict-form">
+                <div class="form-group">
+                    <label for="city"><i class="fas fa-city"></i> Select City</label>
+                    <div class="select-wrapper">
+                        <select name="city" id="city" required>
+                            <option value="" disabled selected>Choose a city...</option>
+                            {% for city in config.TRAIN_CITIES %}
+                            <option value="{{ city }}">{{ city }}</option>
+                            {% endfor %}
+                        </select>
+                        <i class="fas fa-chevron-down select-icon"></i>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">
+                    <span class="spinner"></span>
+                    <span class="btn-text"><i class="fas fa-magic"></i> Predict Temperature</span>
+                </button>
+            </form>
+
+            <div class="info-box">
+                <h4><i class="fas fa-info-circle"></i> How it works</h4>
+                <p>We analyze real-time weather data from 8 major Indian cities to train a Machine Learning model
+                    instantly. Then we predict the temperature for your selected city based on its current humidity,
+                    pressure, and wind speed.</p>
+            </div>
+
+            <!-- Favorites Section -->
+            <div class="favorites-section" id="favorites-section">
+                <h4><i class="fas fa-star"></i> Favorites</h4>
+                <div class="favorites-list" id="favorites-list">
+                    <p class="no-favorites" id="no-favorites">No favorites yet. Click the star after predicting.</p>
+                </div>
+            </div>
+
+            <button id="compare-btn" class="btn-secondary"
+                style="margin-top: 1rem; width: 100%; padding: 12px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; cursor: pointer; font-weight: 600; color: var(--text-color); transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                <i class="fas fa-chart-line"></i> Compare Cities
+            </button>
+
+            <button id="history-btn" class="btn-secondary"
+                style="margin-top: 0.5rem; width: 100%; padding: 12px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; cursor: pointer; font-weight: 600; color: var(--text-color); transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                <i class="fas fa-history"></i> Prediction History
+            </button>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard">
+            <div id="welcome-message" class="welcome-message">
+                <div class="welcome-icon">
+                    <i class="fas fa-cloud-sun"></i>
+                </div>
+                <h2>Welcome to Weather Insights</h2>
+                <p>Select a city to generate real-time predictions and view detailed weather analytics.</p>
+            </div>
+
+            <div id="result-section" style="display: none; flex-direction: column; gap: 2rem;">
+                <!-- Weather Header -->
+                <div class="weather-header">
+                    <div class="city-info">
+                        <h2 id="city-name">City Name<i id="favorite-toggle" class="far fa-star favorite-star"
+                                title="Add to favorites"></i></h2>
+                        <p id="date"><i class="far fa-calendar-alt"></i> Date</p>
+                        <div class="weather-badge">
+                            <span id="weather-desc">Description</span>
+                        </div>
+                    </div>
+                    <div class="weather-visual">
+                        <div id="weather-icon-container" class="weather-icon-anim">
+                            <i class="fas fa-sun"></i>
+                        </div>
+                        <div class="weather-temp">
+                            <div id="temp-display" class="temp-big">--°C</div>
+                            <div class="temp-label">Current Temperature</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon-wrapper feels-like">
+                            <i class="fas fa-temperature-high"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="feels-like">--°C</div>
+                            <div class="stat-label">Feels Like</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon-wrapper humidity">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="humidity">--%</div>
+                            <div class="stat-label">Humidity</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon-wrapper wind">
+                            <i class="fas fa-wind"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="wind-speed">-- m/s</div>
+                            <div class="stat-label">Wind Speed</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon-wrapper pressure">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="pressure">-- hPa</div>
+                            <div class="stat-label">Pressure</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon-wrapper aqi">
+                            <i class="fas fa-lungs"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="aqi">--</div>
+                            <div class="stat-label">AQI</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon-wrapper visibility">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="visibility">-- km</div>
+                            <div class="stat-label">Visibility</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5-Day Forecast -->
+                <div class="forecast-section">
+                    <h3 class="section-title"
+                        style="font-size: 1.25rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-calendar-week"></i> 5-Day Forecast
+                    </h3>
+                    <div class="forecast-grid" id="forecast-grid"
+                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem;">
+                        <!-- Forecast items will be injected here -->
+                    </div>
+                </div>
+
+                <!-- Charts & Metrics -->
+                <div class="analytics-section">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3><i class="fas fa-chart-bar"></i> Prediction Analysis</h3>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="predictionChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="metrics-container">
+                        <h3 class="metrics-title"><i class="fas fa-microchip"></i> Model Performance</h3>
+
+                        <!-- Linear Regression -->
+                        <div class="metric-item">
+                            <div class="metric-label" style="color: var(--primary-color); font-weight: 600;">Linear
+                                Regression</div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
+                                <div>
+                                    <span style="font-size: 0.8rem; color: var(--text-secondary);">R²</span>
+                                    <div class="metric-value" id="lr-r2" style="font-size: 1.2rem;">--</div>
+                                </div>
+                                <div>
+                                    <span style="font-size: 0.8rem; color: var(--text-secondary);">MSE</span>
+                                    <div class="metric-value" id="lr-mse" style="font-size: 1.2rem;">--</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Random Forest -->
+                        <div class="metric-item">
+                            <div class="metric-label" style="color: var(--success-color); font-weight: 600;">Random
+                                Forest</div>
+                            <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
+                                <div>
+                                    <span style="font-size: 0.8rem; color: var(--text-secondary);">R²</span>
+                                    <div class="metric-value" id="rf-r2" style="font-size: 1.2rem;">--</div>
+                                </div>
+                                <div>
+                                    <span style="font-size: 0.8rem; color: var(--text-secondary);">MSE</span>
+                                    <div class="metric-value" id="rf-mse" style="font-size: 1.2rem;">--</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="metric-divider"></div>
+                        <div class="metric-comparison">
+                            <div class="comp-item">
+                                <span class="comp-label">Predicted</span>
+                                <span class="comp-value predicted" id="predicted-val">--</span>
+                            </div>
+                            <div class="comp-item">
+                                <span class="comp-label">Actual</span>
+                                <span class="comp-value actual" id="actual-val">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Comparison Modal -->
+    <div id="compare-modal" class="modal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; backdrop-filter: blur(5px); align-items: center; justify-content: center;">
+        <div class="modal-content"
+            style="background: var(--card-bg); padding: 2rem; border-radius: 24px; width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: var(--shadow-lg);">
+            <span class="close-modal"
+                style="position: absolute; top: 1.5rem; right: 1.5rem; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">&times;</span>
+            <h2 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;"><i
+                    class="fas fa-chart-line"></i> Multi-City Comparison</h2>
+
+            <div class="chart-container" style="height: 300px; margin-bottom: 2rem;">
+                <canvas id="comparisonChart"></canvas>
+            </div>
+
+            <div class="table-container" style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid var(--border-color);">
+                            <th style="text-align: left; padding: 1rem; color: var(--text-secondary);">City</th>
+                            <th style="text-align: right; padding: 1rem; color: var(--text-secondary);">Actual Temp</th>
+                            <th style="text-align: right; padding: 1rem; color: var(--text-secondary);">Predicted Temp
+                            </th>
+                            <th style="text-align: right; padding: 1rem; color: var(--text-secondary);">Error (Diff)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="comparison-table-body">
+                        <!-- Rows injected here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    <!-- History Modal -->
+    <div id="history-modal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 800px;">
+            <span class="close-modal" id="close-history">&times;</span>
+            <h2 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-history"></i> Prediction History
+                <button onclick="exportHistoryToCSV()"
+                    style="margin-left: auto; padding: 0.5rem 1rem; background: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-download"></i> Export CSV
+                </button>
+            </h2>
+
+            <!-- Stats Summary -->
+            <div id="history-stats" class="history-stats"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+            </div>
+
+            <!-- History Table -->
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid var(--border-color);">
+                            <th style="padding: 0.75rem; text-align: left;">City</th>
+                            <th style="padding: 0.75rem; text-align: right;">Actual</th>
+                            <th style="padding: 0.75rem; text-align: right;">Predicted</th>
+                            <th style="padding: 0.75rem; text-align: right;">Error</th>
+                            <th style="padding: 0.75rem; text-align: left;">Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-table-body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+
+</html>
