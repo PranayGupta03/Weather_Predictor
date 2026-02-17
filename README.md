@@ -11,6 +11,16 @@ A **modern, fully-featured weather prediction platform** built with **Flask, Mac
 
 </div>
 
+</div>
+
+---
+
+## 🚀 Live Demo
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://weather-predictor.onrender.com)
+
+> **Note:** The free tier on Render spins down after inactivity. Please allow 30-50 seconds for the initial load.
+
 ---
 
 ## ⭐ Overview
