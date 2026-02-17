@@ -5,14 +5,11 @@ load_dotenv()
 
 class Config:
     API_KEY = os.getenv('OPENWEATHER_API_KEY')
-    SECRET_KEY = os.getenv('FLASK_SECRET_KEY', 'default_secret')
-    DEBUG = os.getenv('DEBUG', 'True') == 'True'
-    # Check if running on Vercel (or other serverless environment)
-    # Vercel sets the 'VERCEL' environment variable to '1'
-    IS_VERCEL = os.environ.get('VERCEL') is not None
+    # Check if running on Render (production environment)
+    IS_PRODUCTION = os.getenv('RENDER') == 'true'
 
-    if IS_VERCEL:
-        # Reduce training data for serverless to prevent timeouts
+    if IS_PRODUCTION:
+        # Reduce training data for production to ensure fast startup (Render free tier acts as a cold start sometimes)
         TRAIN_CITIES = ["Delhi", "Mumbai", "Bengaluru", "Chennai", "Kolkata"]
     else:
         TRAIN_CITIES = [
